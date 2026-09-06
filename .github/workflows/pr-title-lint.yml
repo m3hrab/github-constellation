@@ -1,0 +1,40 @@
+name: PR Title Lint
+
+# Enforces Conventional Commits on the PR title, since PRs are squash-merged
+# and the PR title becomes the permanent commit message on main.
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  lint-pr-title:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            refactor
+            test
+            chore
+            ci
+            perf
+          scopes: |
+            generator
+            action
+            readme
+            workflows
+            templates
+          requireScope: false
+          subjectPattern: ^[a-z].+[^.]$
+          subjectPatternError: >
+            The PR title's subject must start with a lowercase letter and
+            must not end with a period. Example:
+            "feat(generator): add minimal layout mode"

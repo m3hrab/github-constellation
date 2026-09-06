@@ -1,0 +1,78 @@
+name: "GitHub Constellation"
+description: "Render your GitHub contribution history as a generative SVG constellation — stars for days, glowing streak lines, pulsing high-commit days."
+author: "github-constellation contributors"
+branding:
+  icon: "star"
+  color: "purple"
+
+inputs:
+  github_user:
+    description: "GitHub username whose contribution calendar to render."
+    required: true
+  github_token:
+    description: "Token used to query the GitHub GraphQL API. A classic PAT with no scopes is enough for a public contribution calendar. Do not use the default GITHUB_TOKEN — it cannot read contribution data for arbitrary users."
+    required: true
+  commit_cap:
+    description: "Commit count at which star size/opacity growth is capped, so no single outlier day flattens the rest of the visualization."
+    required: false
+    default: "20"
+  twinkle_min_commits:
+    description: "Minimum commits in a single day required for that day's star to twinkle and pulse."
+    required: false
+    default: "10"
+  recent_color_dark:
+    description: "Hex color for the most recent end of the recency gradient (dark theme)."
+    required: false
+    default: "#ffcf5c"
+  old_color_dark:
+    description: "Hex color for the oldest end of the recency gradient (dark theme)."
+    required: false
+    default: "#7c6fe0"
+  recent_color_light:
+    description: "Hex color for the most recent end of the recency gradient (light theme)."
+    required: false
+    default: "#c9820a"
+  old_color_light:
+    description: "Hex color for the oldest end of the recency gradient (light theme)."
+    required: false
+    default: "#463c94"
+  output_dir:
+    description: "Directory (relative to the workspace, or absolute) that the generated SVGs are written to."
+    required: false
+    default: "dist"
+  layout:
+    description: "'full' for month/weekday labels and a stats caption, or 'minimal' for a bare star grid with no chrome."
+    required: false
+    default: "full"
+
+outputs:
+  dark_svg_path:
+    description: "Path to the generated dark-theme SVG."
+    value: ${{ steps.generate.outputs.dark_svg_path }}
+  light_svg_path:
+    description: "Path to the generated light-theme SVG."
+    value: ${{ steps.generate.outputs.light_svg_path }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - name: Generate constellation SVGs
+      id: generate
+      shell: bash
+      env:
+        GITHUB_USER: ${{ inputs.github_user }}
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        COMMIT_CAP: ${{ inputs.commit_cap }}
+        TWINKLE_MIN_COMMITS: ${{ inputs.twinkle_min_commits }}
+        RECENT_COLOR_DARK: ${{ inputs.recent_color_dark }}
+        OLD_COLOR_DARK: ${{ inputs.old_color_dark }}
+        RECENT_COLOR_LIGHT: ${{ inputs.recent_color_light }}
+        OLD_COLOR_LIGHT: ${{ inputs.old_color_light }}
+        OUTPUT_DIR: ${{ inputs.output_dir }}
+        LAYOUT: ${{ inputs.layout }}
+      run: node "${{ github.action_path }}/src/generate-constellation.js"

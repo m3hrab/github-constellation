@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  syntax-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Check generator syntax
+        run: node --check src/generate-constellation.js
+
+      - name: Validate action.yml has required top-level keys
+        run: |
+          node -e "
+            const fs = require('fs');
+            const content = fs.readFileSync('action.yml', 'utf8');
+            const required = ['name:', 'description:', 'inputs:', 'runs:'];
+            const missing = required.filter((k) => !content.includes(k));
+            if (missing.length) {
+              console.error('action.yml missing required keys:', missing);
+              process.exit(1);
+            }
+            console.log('action.yml looks structurally sound');
+          "

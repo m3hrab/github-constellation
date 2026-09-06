@@ -1,0 +1,67 @@
+name: Release
+
+# Tags a new patch release on every push to main, and moves the floating
+# major-version tag (e.g. v1) to point at it, so consumers can safely pin
+# `uses: your-username/github-constellation@v1` and always get the latest
+# compatible release.
+#
+# Bump the major version yourself (edit BUMP below, or push a manual tag)
+# when you ship a breaking change to action.yml's inputs/outputs.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - ".github/ISSUE_TEMPLATE/**"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compute next version
+        id: version
+        run: |
+          git fetch --tags
+          latest=$(git tag -l 'v[0-9]*.[0-9]*.[0-9]*' | sort -V | tail -n1)
+
+          if [ -z "$latest" ]; then
+            major=1; minor=0; patch=0
+          else
+            version=${latest#v}
+            major=$(echo "$version" | cut -d. -f1)
+            minor=$(echo "$version" | cut -d. -f2)
+            patch=$(echo "$version" | cut -d. -f3)
+            patch=$((patch + 1))
+          fi
+
+          full="v${major}.${minor}.${patch}"
+          echo "full=$full" >> "$GITHUB_OUTPUT"
+          echo "major=v${major}" >> "$GITHUB_OUTPUT"
+          echo "Next release: $full (floating tag: v${major})"
+
+      - name: Create full version tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.version.outputs.full }}" -m "Release ${{ steps.version.outputs.full }}"
+          git push origin "${{ steps.version.outputs.full }}"
+
+      - name: Move floating major tag
+        run: |
+          git tag -fa "${{ steps.version.outputs.major }}" -m "Update ${{ steps.version.outputs.major }} to ${{ steps.version.outputs.full }}"
+          git push origin "${{ steps.version.outputs.major }}" --force
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.full }}
+          generate_release_notes: true
