@@ -7,7 +7,7 @@
 Every day you code becomes a star. Streaks become glowing constellation
 lines. Your biggest days pulse like they know it.
 
-<img src="https://raw.githubusercontent.com/your-username/github-constellation/main/docs/hero-dark.svg" alt="github-constellation hero example" width="850" />
+<img src="https://raw.githubusercontent.com/m3hrab/github-constellation/main/docs/hero-dark.svg" alt="github-constellation hero example" width="850" />
 
 <sub>↑ Replace this with your own generated SVG — see <a href="#-quick-start">Quick Start</a> below.</sub>
 
@@ -25,7 +25,7 @@ lines. Your biggest days pulse like they know it.
 ## Why
 
 GitHub's contribution graph is a grid of green squares. It's information —
-but it isn't *beautiful*, and it doesn't tell you anything a spreadsheet
+but it isn't _beautiful_, and it doesn't tell you anything a spreadsheet
 couldn't. **github-constellation** renders the exact same data as a
 generative sky: stars for days, size for effort, color for time, and soft
 glowing threads for the streaks that held your year together. Drop it in
@@ -37,7 +37,7 @@ your profile README and it becomes the thing people actually look at.
   dim background dust.
 - **📏 Size = commit count.** Bigger day, bigger star — scaled and capped so
   one huge day never flattens the rest of the sky.
-- **🎨 Color = recency.** A gradient sweeps across your *entire year*, oldest
+- **🎨 Color = recency.** A gradient sweeps across your _entire year_, oldest
   to newest, so the color alone tells you when things happened.
 - **〰️ Streaks = glowing curves.** Consecutive contribution days are
   connected with soft, blurred, smoothly-curved constellation lines — not
@@ -58,7 +58,7 @@ Three steps: add a workflow file, add a token secret, push.
 **1. Create a [classic Personal Access Token](https://github.com/settings/tokens/new)** —
 no scopes needed, since it's only reading public contribution data — and add
 it to your profile repository as a secret named `CONSTELLATION_TOKEN`
-(*Settings → Secrets and variables → Actions → New repository secret*).
+(_Settings → Secrets and variables → Actions → New repository secret_).
 
 > Why not the default `GITHUB_TOKEN`? It's scoped to the current repo and
 > isn't reliably able to query another user's GraphQL contribution data
@@ -72,7 +72,7 @@ name: Update Constellation
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # once a day; tweak to taste
+    - cron: "0 0 * * *" # once a day; tweak to taste
   workflow_dispatch: {}
 
 permissions:
@@ -113,18 +113,18 @@ and you're done. It'll keep itself up to date on the schedule from here on.
 
 ## 🔧 Inputs
 
-| Input                 | Required | Default    | Description                                                                 |
-| ---------------------- | :------: | ---------- | ----------------------------------------------------------------------------- |
-| `github_user`           |    ✅    | —          | GitHub username whose contribution calendar to render.                       |
-| `github_token`          |    ✅    | —          | Token with read access to the GitHub GraphQL API. See Quick Start above.     |
-| `commit_cap`            |    ❌    | `20`       | Commit count at which star size/opacity growth is capped.                    |
-| `twinkle_min_commits`   |    ❌    | `10`       | Minimum commits/day required for that day's star to twinkle and pulse.       |
-| `recent_color_dark`     |    ❌    | `#ffcf5c`  | Hex color for the most-recent end of the gradient, dark theme.                |
-| `old_color_dark`        |    ❌    | `#7c6fe0`  | Hex color for the oldest end of the gradient, dark theme.                    |
-| `recent_color_light`    |    ❌    | `#c9820a`  | Hex color for the most-recent end of the gradient, light theme.               |
-| `old_color_light`       |    ❌    | `#463c94`  | Hex color for the oldest end of the gradient, light theme.                   |
-| `output_dir`            |    ❌    | `dist`     | Directory the generated SVGs are written to.                                  |
-| `layout`                |    ❌    | `full`     | `full` (labels + stats caption) or `minimal` (bare star grid, no chrome).      |
+| Input                 | Required | Default   | Description                                                               |
+| --------------------- | :------: | --------- | ------------------------------------------------------------------------- |
+| `github_user`         |    ✅    | —         | GitHub username whose contribution calendar to render.                    |
+| `github_token`        |    ✅    | —         | Token with read access to the GitHub GraphQL API. See Quick Start above.  |
+| `commit_cap`          |    ❌    | `20`      | Commit count at which star size/opacity growth is capped.                 |
+| `twinkle_min_commits` |    ❌    | `10`      | Minimum commits/day required for that day's star to twinkle and pulse.    |
+| `recent_color_dark`   |    ❌    | `#ffcf5c` | Hex color for the most-recent end of the gradient, dark theme.            |
+| `old_color_dark`      |    ❌    | `#7c6fe0` | Hex color for the oldest end of the gradient, dark theme.                 |
+| `recent_color_light`  |    ❌    | `#c9820a` | Hex color for the most-recent end of the gradient, light theme.           |
+| `old_color_light`     |    ❌    | `#463c94` | Hex color for the oldest end of the gradient, light theme.                |
+| `output_dir`          |    ❌    | `dist`    | Directory the generated SVGs are written to.                              |
+| `layout`              |    ❌    | `full`    | `full` (labels + stats caption) or `minimal` (bare star grid, no chrome). |
 
 **Outputs:** `dark_svg_path`, `light_svg_path` — absolute paths to the two
 generated files, in case a later step in your workflow needs them.
@@ -134,16 +134,16 @@ generated files, in case a later step in your workflow needs them.
 > Using github-constellation on your profile? Open a PR adding your
 > screenshot here — real skies are the best advertisement.
 
-| | | |
-|---|---|---|
-| *your sky here* | *your sky here* | *your sky here* |
+|                 |                 |                 |
+| --------------- | --------------- | --------------- |
+| _your sky here_ | _your sky here_ | _your sky here_ |
 
 ## ❓ FAQ
 
 **Does this work for private contributions?**
 Yes — the GraphQL `contributionsCollection` query returns the same data
 shown on your public profile, including the "private contributions" count if
-you've enabled *Include private contributions* in your GitHub profile
+you've enabled _Include private contributions_ in your GitHub profile
 settings, using whatever token you supply.
 
 **Can I use this on someone else's profile, or an org?**
