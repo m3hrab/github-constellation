@@ -1,0 +1,41 @@
+name: Refresh README Preview
+
+# Dogfoods this repo's own action: renders the maintainer's real
+# contribution constellation and commits it into docs/, so the hero image
+# in README.md is a genuinely live, self-updating render — not a static
+# placeholder. Anyone can verify this by checking the commit history on
+# docs/constellation-dark.svg.
+
+on:
+  schedule:
+    - cron: "0 3 * * *" # once a day
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - "src/generate-constellation.js"
+      - "action.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  showcase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate maintainer's own constellation (dogfooding)
+        uses: ./
+        with:
+          github_user: m3hrab
+          github_token: ${{ secrets.SHOWCASE_TOKEN }}
+          output_dir: docs
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git diff --staged --quiet || git commit -m "chore: refresh README preview constellation"
+          git push

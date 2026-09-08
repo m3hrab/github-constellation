@@ -61,7 +61,9 @@ function envInt(name) {
   if (raw === undefined || raw === "") return DEFAULTS[name];
   const n = parseInt(raw, 10);
   if (Number.isNaN(n)) {
-    console.warn(`[github-constellation] ${name}="${raw}" is not a valid integer, using default ${DEFAULTS[name]}`);
+    console.warn(
+      `[github-constellation] ${name}="${raw}" is not a valid integer, using default ${DEFAULTS[name]}`,
+    );
     return DEFAULTS[name];
   }
   return n;
@@ -71,7 +73,9 @@ function envHex(name) {
   const raw = process.env[name];
   if (!raw) return DEFAULTS[name];
   if (!/^#?[0-9a-fA-F]{6}$/.test(raw)) {
-    console.warn(`[github-constellation] ${name}="${raw}" is not a valid hex color, using default ${DEFAULTS[name]}`);
+    console.warn(
+      `[github-constellation] ${name}="${raw}" is not a valid hex color, using default ${DEFAULTS[name]}`,
+    );
     return DEFAULTS[name];
   }
   return raw.startsWith("#") ? raw : `#${raw}`;
@@ -145,7 +149,7 @@ function graphqlRequest(query, variables) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `bearer ${GITHUB_TOKEN}`,
+      Authorization: `bearer ${GITHUB_TOKEN}`,
       "User-Agent": "github-constellation",
       "Content-Length": Buffer.byteLength(data),
     },
@@ -222,13 +226,23 @@ function blendRgbStrings(a, b) {
   const pa = parseRgbString(a);
   const pb = parseRgbString(b);
   return `rgb(${Math.round((pa.r + pb.r) / 2)},${Math.round(
-    (pa.g + pb.g) / 2
+    (pa.g + pb.g) / 2,
   )},${Math.round((pa.b + pb.b) / 2)})`;
 }
 
 const MONTH_NAMES = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 // Row index (0=Sun..6=Sat, matching GitHub's contributionDays order) ->
@@ -297,8 +311,7 @@ function buildSvg(weeks, theme, layout) {
   const monthLabelHeight = isMinimal ? 0 : 18;
   const captionHeight = isMinimal ? 0 : 42;
   const width = weeks.length * cellSize + paddingLeft + paddingRight;
-  const height =
-    monthLabelHeight + 7 * cellSize + paddingY * 2 + captionHeight;
+  const height = monthLabelHeight + 7 * cellSize + paddingY * 2 + captionHeight;
 
   const allDays = [];
   weeks.forEach((week, wi) => {
@@ -397,13 +410,13 @@ function buildSvg(weeks, theme, layout) {
       const cp2y = p2.y - (p3.y - p1.y) / 6;
       const strokeColor = blendRgbStrings(
         colors.get(streak[i].date),
-        colors.get(streak[i + 1].date)
+        colors.get(streak[i + 1].date),
       );
       curves.push({
         d: `M ${p1.x.toFixed(2)} ${p1.y.toFixed(2)} C ${cp1x.toFixed(
-          2
+          2,
         )} ${cp1y.toFixed(2)}, ${cp2x.toFixed(2)} ${cp2y.toFixed(
-          2
+          2,
         )}, ${p2.x.toFixed(2)} ${p2.y.toFixed(2)}`,
         color: strokeColor,
       });
@@ -415,23 +428,37 @@ function buildSvg(weeks, theme, layout) {
 
   let monthLabelsSvg = "";
   if (!isMinimal) {
+    // GitHub's contribution calendar almost always starts on a partial
+    // week, which can flag a "month change" one column after the very
+    // first label — e.g. a week starting Dec 30 gets labeled "Dec", then
+    // the next week (Jan 5) immediately gets labeled "Jan" just 12px to
+    // its right. Two 3-letter labels can't fit in 12px, so they render on
+    // top of each other. Enforce a minimum pixel gap between labels and
+    // simply skip any month change that's too close to the previous one —
+    // it'll still get labeled correctly whenever the *next* month change
+    // occurs with enough room.
     const monthLabels = [];
     let lastMonth = null;
+    let lastLabelX = -Infinity;
+    const minLabelGap = cellSize * 3; // ~3 weeks of clearance per label
+
     weeks.forEach((week, wi) => {
       const firstDay = week.contributionDays[0];
       if (!firstDay) return;
       const month = new Date(firstDay.date).getMonth();
-      if (month !== lastMonth) {
-        monthLabels.push({
-          label: MONTH_NAMES[month],
-          x: paddingLeft + wi * cellSize,
-        });
-        lastMonth = month;
-      }
+      if (month === lastMonth) return;
+
+      const x = paddingLeft + wi * cellSize;
+      lastMonth = month; // always advance, even if we skip rendering this one
+      if (x - lastLabelX < minLabelGap) return;
+
+      monthLabels.push({ label: MONTH_NAMES[month], x });
+      lastLabelX = x;
     });
+
     monthLabels.forEach((m) => {
       monthLabelsSvg += `<text x="${m.x.toFixed(
-        2
+        2,
       )}" y="${monthLabelHeight}" font-family="Fira Code, monospace" font-size="9" fill="${textColor}" opacity="0.5">${m.label}</text>`;
     });
   }
@@ -441,10 +468,8 @@ function buildSvg(weeks, theme, layout) {
     Object.entries(DAY_LABELS).forEach(([row, label]) => {
       const y =
         monthLabelHeight + paddingY + Number(row) * cellSize + cellSize / 2 + 3;
-      dayLabelsSvg += `<text x="${(paddingLeft - 8).toFixed(
-        2
-      )}" y="${y.toFixed(
-        2
+      dayLabelsSvg += `<text x="${(paddingLeft - 8).toFixed(2)}" y="${y.toFixed(
+        2,
       )}" text-anchor="end" font-family="Fira Code, monospace" font-size="9" fill="${textColor}" opacity="0.5">${label}</text>`;
     });
   }
@@ -484,25 +509,25 @@ function buildSvg(weeks, theme, layout) {
       brightStarsSvg += `<circle class="tw-halo" style="--ho:${(
         o * 0.18
       ).toFixed(
-        2
+        2,
       )};animation-delay:${haloDelay}s;animation-duration:${haloDuration}s" cx="${pos.x.toFixed(
-        2
+        2,
       )}" cy="${pos.y.toFixed(2)}" r="${(r * 2.4).toFixed(
-        2
+        2,
       )}" fill="${fill}" opacity="${(o * 0.18).toFixed(2)}" />`;
 
       brightStarsSvg += `<circle class="tw" style="--o:${o.toFixed(
-        2
+        2,
       )};animation-delay:${delay}s;animation-duration:${duration}s" cx="${pos.x.toFixed(
-        2
+        2,
       )}" cy="${pos.y.toFixed(2)}" r="${r.toFixed(
-        2
+        2,
       )}" fill="${fill}" opacity="${o.toFixed(2)}">${title}</circle>`;
     } else {
       dimStarsSvg += `<circle cx="${pos.x.toFixed(2)}" cy="${pos.y.toFixed(
-        2
+        2,
       )}" r="${r.toFixed(2)}" fill="${fill}" opacity="${o.toFixed(
-        2
+        2,
       )}">${title}</circle>`;
     }
   });
@@ -569,13 +594,13 @@ function buildSvg(weeks, theme, layout) {
 
 async function main() {
   console.log(
-    `[github-constellation] Fetching contributions for "${GITHUB_USER}"...`
+    `[github-constellation] Fetching contributions for "${GITHUB_USER}"...`,
   );
   const result = await graphqlRequest(query, { userName: GITHUB_USER });
 
   if (!result.data || !result.data.user) {
     throw new Error(
-      `GitHub API returned no user data for "${GITHUB_USER}". Check the username and that the token has access.`
+      `GitHub API returned no user data for "${GITHUB_USER}". Check the username and that the token has access.`,
     );
   }
 
@@ -603,7 +628,7 @@ async function main() {
   if (process.env.GITHUB_OUTPUT) {
     fs.appendFileSync(
       process.env.GITHUB_OUTPUT,
-      `dark_svg_path=${darkPath}\nlight_svg_path=${lightPath}\n`
+      `dark_svg_path=${darkPath}\nlight_svg_path=${lightPath}\n`,
     );
   }
 }

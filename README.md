@@ -4,44 +4,55 @@
 
 ### Turn your GitHub contributions into a living night sky.
 
-**Stars for your coding days. · Glow for your streaks. · Color for your journey.**
+**Stars for your coding days · Glow for your streaks · Color for your journey**
 
-<img src="https://raw.githubusercontent.com/m3hrab/github-constellation/main/docs/hero-dark.svg" alt="github-constellation preview" width="850" />
+<img src="https://raw.githubusercontent.com/m3hrab/github-constellation/main/docs/constellation-dark.svg" alt="github-constellation live preview — the maintainer's real contribution history" width="850" />
 
-<br />
+<sub>↑ This is a real render of the maintainer's own contributions, refreshed daily by <a href=".github/workflows/self-showcase.yml">this repo's own Action</a> — not a mockup.</sub>
 
-[![Marketplace](https://img.shields.io/badge/GitHub%20Action-github--constellation-181717?logo=github\&logoColor=white)](https://github.com/marketplace/actions/github-constellation)
-[![GitHub stars](https://img.shields.io/github/stars/m3hrab/github-constellation?style=flat\&logo=github\&color=gold)](https://github.com/m3hrab/github-constellation/stargazers)
-[![Latest release](https://img.shields.io/github/v/release/m3hrab/github-constellation?style=flat)](https://github.com/m3hrab/github-constellation/releases)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+<br /><br />
 
-<br />
+[![Marketplace](https://img.shields.io/badge/GitHub%20Action-github--constellation-181717?logo=github&logoColor=white)](https://github.com/marketplace/actions/github-constellation)
+[![GitHub stars](https://img.shields.io/github/stars/m3hrab/github-constellation?style=flat&logo=github&color=gold)](https://github.com/m3hrab/github-constellation/stargazers)
+[![Latest release](https://img.shields.io/github/v/release/m3hrab/github-constellation)](https://github.com/m3hrab/github-constellation/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-**A beautiful, zero-runtime-dependency GitHub Action that transforms your contribution calendar into a generative constellation.**
+**A zero-runtime-dependency GitHub Action that transforms your contribution
+calendar into a generative constellation.**
 
 </div>
 
 ---
 
-## ✨ What is this?
+### Contents
 
-Your GitHub contribution graph tells a story — but it looks like a spreadsheet.
-
-**github-constellation** turns that same contribution history into a visual night sky.
-
-Every contribution day becomes a star.
-More commits make the star brighter and larger.
-Streaks become glowing constellation lines.
-Recent activity shifts the color toward the newest end of the gradient.
-Big coding days gently pulse like they're still alive.
-
-The result is a **self-updating SVG** you can embed directly into your GitHub profile README.
-
-> **Your contribution history, visualized as a constellation.**
+[What is this](#-what-is-this) · [How it works](#-how-it-works) ·
+[Features](#-features) · [Quick Start](#-quick-start) ·
+[Customize](#-customize-your-sky) · [Inputs](#-inputs) ·
+[Gallery](#️-gallery) · [Design philosophy](#-design-philosophy) ·
+[Architecture](#-performance--architecture) · [Security](#-security) ·
+[FAQ](#-faq) · [Contributing](#-contributing) · [License](#-license)
 
 ---
 
-## 🌌 How it works
+## ✨ What is this?
+
+Your GitHub contribution graph tells a story — but it looks like a
+spreadsheet.
+
+**github-constellation** turns that same contribution history into a night
+sky. Every contribution day becomes a star. More commits make it brighter
+and larger. Streaks become glowing constellation lines. Recent activity
+shifts the color toward the newest end of the gradient. Your biggest days
+gently pulse, like they're still alive.
+
+The result is a **self-updating SVG** you embed directly in your GitHub
+profile README.
+
+> Your contribution history, visualized as a constellation.
+
+## 🌠 How it works
 
 ```text
 GitHub Contributions
@@ -50,10 +61,10 @@ GitHub Contributions
    GraphQL API
         │
         ▼
-┌─────────────────────┐
-│ github-constellation│
-│      generator      │
-└──────────┬──────────┘
+┌──────────────────────┐
+│ github-constellation  │
+│      generator        │
+└──────────┬────────────┘
            │
            ├── ⭐ Contribution days → Stars
            ├── 📏 Commit count      → Size
@@ -72,99 +83,78 @@ GitHub Contributions
       GitHub README
 ```
 
-Everything is generated ahead of time.
-
-**No client-side API calls. No JavaScript on your profile. No runtime server.**
-
----
+Everything is generated ahead of time. **No client-side API calls, no
+JavaScript on your profile, no runtime server** — just two static SVGs that
+happen to have a CSS twinkle animation baked in.
 
 ## ⭐ Features
 
-### Contribution → Visual mapping
+### Contribution → visual mapping
 
 | GitHub data       | Constellation         |
 | ----------------- | --------------------- |
-| Contribution day  | ⭐ Star                |
+| Contribution day  | ⭐ Star               |
 | Commit count      | 📏 Star size          |
 | Contribution date | 🎨 Color              |
 | Consecutive days  | 〰️ Constellation line |
 | High-activity day | 💫 Pulse / twinkle    |
-| No contributions  | · Background dust     |
+| No contributions  | · Dim background dust |
 
 ### Built for GitHub
 
-* 🌗 **Dark + light SVGs** generated automatically
-* 🎨 **Fully customizable gradients**
-* 💫 **Animated twinkle effects** for high-activity days
-* 〰️ **Smooth constellation curves** connecting streaks
-* 📊 **Commit-aware star sizing**
-* ⚙️ **Configurable through GitHub Action inputs**
-* 🔄 **Automatically regenerates every day**
-* 🧵 **Zero runtime dependencies**
-* 🚀 **Works directly from a GitHub repository**
-* 📦 **Produces static SVG output**
-* 🔐 **No external database or hosted service required**
-
----
+- 🌗 Dark **and** light SVGs, generated together
+- 🎨 Fully customizable gradient colors for both themes
+- 💫 Animated twinkle + breathing halo on standout days
+- 〰️ Smooth Catmull-Rom curves connecting streaks, not straight connectors
+- 📊 Commit-aware, capped star sizing (one huge day won't flatten the rest)
+- ⚙️ Every tunable exposed as an action input
+- 🔄 Regenerates on whatever schedule you set
+- 🧵 **Zero runtime dependencies** — one Node script using only `fs`,
+  `path`, and `https`
+- 📦 Produces plain static SVG output
+- 🔐 No external database, no hosted service, nothing to trust but your
+  own repo
 
 ## 🚀 Quick Start
 
-### 1. Create a GitHub token
+Three steps: add a token secret, add a workflow, push.
 
-Create a **classic Personal Access Token** with no scopes:
-
-[Create a GitHub Personal Access Token](https://github.com/settings/tokens/new?utm_source=chatgpt.com)
-
-Then add it to your repository:
-
-**Settings → Secrets and variables → Actions → New repository secret**
-
-Use:
+**1. Create a token.**
+Generate a [classic Personal Access Token](https://github.com/settings/tokens/new)
+— no scopes needed, since it only reads public contribution data — and add
+it to your repository as a secret:
 
 ```text
+Settings → Secrets and variables → Actions → New repository secret
 Name:  CONSTELLATION_TOKEN
 Value: <your token>
 ```
 
-> **Why a PAT?**
->
-> The workflow needs to query GitHub's GraphQL API for contribution data.
-> The repository-scoped `GITHUB_TOKEN` can be restrictive when querying
-> contribution information outside the current repository.
+> **Why a PAT instead of the built-in `GITHUB_TOKEN`?** The built-in token
+> is scoped narrowly to the repo running the workflow and isn't reliably
+> able to query another user's GraphQL contribution data across every
+> GitHub setup. A plain classic PAT sidesteps that entirely. See the
+> [FAQ](#-faq) for more.
 
----
-
-### 2. Add the workflow
-
-Create:
-
-```text
-.github/
-└── workflows/
-    └── constellation.yml
-```
-
-Then add:
+**2. Add the workflow.**
+Create `.github/workflows/constellation.yml`:
 
 ```yaml
 name: Update Constellation
 
 on:
   schedule:
-    - cron: "0 0 * * *"
-  workflow_dispatch:
+    - cron: "0 0 * * *" # once a day; tweak to taste
+  workflow_dispatch: {}
 
 permissions:
   contents: write
 
 jobs:
   generate:
-    name: Generate constellation
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Generate constellation
         uses: m3hrab/github-constellation@v1
@@ -172,57 +162,31 @@ jobs:
           github_user: ${{ github.repository_owner }}
           github_token: ${{ secrets.CONSTELLATION_TOKEN }}
 
-      - name: Commit generated SVGs
+      - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
           git add dist/
-
-          if git diff --staged --quiet; then
-            echo "No constellation changes."
-          else
-            git commit -m "chore: update constellation"
-            git push
-          fi
+          git diff --staged --quiet || git commit -m "chore: update constellation"
+          git push
 ```
 
----
-
-### 3. Add it to your profile README
+**3. Embed it in your profile README.**
 
 ```markdown
 <picture>
-  <source
-    media="(prefers-color-scheme: dark)"
-    srcset="dist/constellation-dark.svg"
-  />
-  <source
-    media="(prefers-color-scheme: light)"
-    srcset="dist/constellation-light.svg"
-  />
-  <img
-    alt="My GitHub contribution constellation"
-    src="dist/constellation-dark.svg"
-  />
+  <source media="(prefers-color-scheme: dark)" srcset="dist/constellation-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="dist/constellation-light.svg">
+  <img alt="My GitHub contribution constellation" src="dist/constellation-dark.svg">
 </picture>
 ```
 
-Then run:
-
-**Actions → Update Constellation → Run workflow**
-
-That's it.
-
-Your contribution constellation will regenerate automatically.
-
----
+Trigger it once via **Actions → Update Constellation → Run workflow**, and
+you're done — it stays current on the schedule from here on.
 
 ## 🎨 Customize your sky
 
-You don't have to use the defaults.
-
-For example:
+You don't have to use the defaults:
 
 ```yaml
 - name: Generate constellation
@@ -230,264 +194,153 @@ For example:
   with:
     github_user: ${{ github.repository_owner }}
     github_token: ${{ secrets.CONSTELLATION_TOKEN }}
-
     commit_cap: 25
     twinkle_min_commits: 12
-
     recent_color_dark: "#ffd166"
     old_color_dark: "#6c63ff"
-
     recent_color_light: "#b86b00"
     old_color_light: "#4338ca"
-
     layout: "full"
 ```
 
-### Available inputs
+## 🔧 Inputs
 
-| Input                 | Required |   Default | Description                                 |
-| --------------------- | :------: | --------: | ------------------------------------------- |
-| `github_user`         |     ✅    |         — | GitHub username to visualize                |
-| `github_token`        |     ✅    |         — | GitHub GraphQL API token                    |
-| `commit_cap`          |     ❌    |      `20` | Maximum commit count used for star scaling  |
-| `twinkle_min_commits` |     ❌    |      `10` | Minimum commits required for a pulsing star |
-| `recent_color_dark`   |     ❌    | `#ffcf5c` | Recent-date gradient color for dark mode    |
-| `old_color_dark`      |     ❌    | `#7c6fe0` | Old-date gradient color for dark mode       |
-| `recent_color_light`  |     ❌    | `#c9820a` | Recent-date gradient color for light mode   |
-| `old_color_light`     |     ❌    | `#463c94` | Old-date gradient color for light mode      |
-| `output_dir`          |     ❌    |    `dist` | Generated SVG output directory              |
-| `layout`              |     ❌    |    `full` | `full` or `minimal`                         |
+| Input                 | Required | Default   | Description                                                                             |
+| --------------------- | :------: | --------- | --------------------------------------------------------------------------------------- |
+| `github_user`         |    ✅    | —         | GitHub username whose contribution calendar to render.                                  |
+| `github_token`        |    ✅    | —         | Token with read access to the GitHub GraphQL API. See Quick Start above.                |
+| `commit_cap`          |    ❌    | `20`      | Commit count at which star size/opacity growth is capped.                               |
+| `twinkle_min_commits` |    ❌    | `10`      | Minimum commits in a day required for that day's star to twinkle and pulse.             |
+| `recent_color_dark`   |    ❌    | `#ffcf5c` | Hex color for the most-recent end of the gradient, dark theme.                          |
+| `old_color_dark`      |    ❌    | `#7c6fe0` | Hex color for the oldest end of the gradient, dark theme.                               |
+| `recent_color_light`  |    ❌    | `#c9820a` | Hex color for the most-recent end of the gradient, light theme.                         |
+| `old_color_light`     |    ❌    | `#463c94` | Hex color for the oldest end of the gradient, light theme.                              |
+| `output_dir`          |    ❌    | `dist`    | Directory the generated SVGs are written to.                                            |
+| `layout`              |    ❌    | `full`    | `full` (month/weekday labels + stats caption) or `minimal` (bare star grid, no chrome). |
+
+**Outputs:** `dark_svg_path` and `light_svg_path` — absolute paths to the
+two generated files, for later steps in your workflow to reference.
 
 ### Layouts
 
-**`full`**
+**`full`** — includes month/weekday labels and the stats caption (total
+contributions, longest streak, current streak, busiest month).
 
-Includes labels and the statistics caption.
-
-**`minimal`**
-
-Just the constellation — ideal for compact profile layouts.
-
----
+**`minimal`** — just the constellation, no chrome. Good for tight embeds
+next to an avatar or in a compact profile layout.
 
 ## 🖼️ Gallery
 
-### Dark sky
+Both themes below are the maintainer's real sky, live — see
+[How it works](#-how-it-works) and the workflow linked under the hero image
+at the top of this README.
 
-<img src="https://raw.githubusercontent.com/m3hrab/github-constellation/main/docs/hero-dark.svg" alt="Dark github-constellation example" width="850" />
+<table>
+<tr><td align="center"><b>Dark</b></td></tr>
+<tr><td><img src="https://raw.githubusercontent.com/m3hrab/github-constellation/main/docs/constellation-dark.svg" alt="Dark theme constellation" width="820" /></td></tr>
+<tr><td align="center"><b>Light</b></td></tr>
+<tr><td><img src="https://raw.githubusercontent.com/m3hrab/github-constellation/main/docs/constellation-light.svg" alt="Light theme constellation" width="820" /></td></tr>
+</table>
 
-### Light sky
-
-<img src="https://raw.githubusercontent.com/m3hrab/github-constellation/main/docs/hero-light.svg" alt="Light github-constellation example" width="850" />
-
-> Have a particularly beautiful constellation?
-> Open a PR and add it to the gallery.
-
----
+> Using github-constellation on your own profile? Open a PR adding a
+> screenshot to this section — real skies are the best advertisement this
+> project has.
 
 ## 🧠 Design philosophy
 
-github-constellation intentionally keeps the visualization simple.
-
-It doesn't try to turn your GitHub history into a dashboard full of charts.
-
-Instead, it answers one question:
+github-constellation intentionally keeps the visualization simple. It
+doesn't try to turn your GitHub history into a dashboard full of charts —
+it answers one question:
 
 > **What would my coding year look like if it were a night sky?**
 
-That means every visual element has a purpose:
-
-**Stars** represent consistency.
-**Size** represents effort.
-**Color** represents time.
-**Lines** represent momentum.
-**Glow** represents exceptional days.
-
-The goal isn't more data.
-
-**It's a more memorable way to see the data you already have.**
-
----
+Every visual element has exactly one job: **stars** represent consistency,
+**size** represents effort, **color** represents time, **lines** represent
+momentum, **glow** represents exceptional days. The goal isn't more data —
+it's a more memorable way to see the data you already have.
 
 ## ⚡ Performance & architecture
 
-github-constellation is deliberately lightweight.
+The generator uses only Node.js built-ins — `fs`, `path`, `https`. There's:
 
-The generator uses only Node.js built-ins:
-
-```text
-fs
-path
-https
-```
-
-There are:
-
-* ❌ No npm dependencies
-* ❌ No database
-* ❌ No hosted backend
-* ❌ No client-side API requests
-* ❌ No external runtime service
-
-The workflow generates static SVG files and commits them to your repository.
-
-Your profile simply displays those files.
+- ❌ No npm dependencies
+- ❌ No database
+- ❌ No hosted backend
+- ❌ No client-side API requests at view-time
+- ❌ Nothing running except a CSS animation already baked into the SVG
 
 ```text
-GitHub Actions
-      │
-      ▼
-Generate SVG
-      │
-      ▼
-Commit to repo
-      │
-      ▼
-GitHub README
-      │
-      ▼
-       ⭐
+GitHub Actions → Generate SVG → Commit to repo → GitHub README → ⭐
 ```
 
----
+The workflow generates static files and commits them. Your profile just
+displays those files — there's nothing to keep running, scale, or pay for.
 
 ## 🔐 Security
 
-The action only needs access to GitHub's GraphQL API to retrieve contribution information.
-
-Your token should be stored as a **GitHub Actions secret**:
-
-```text
-CONSTELLATION_TOKEN
-```
-
-Never hard-code your token into:
-
-* workflow files
-* source code
-* README files
-* commits
-* issues
-* pull requests
-
-For public contribution data, use the minimum permissions necessary.
-
----
+The action only needs read access to GitHub's GraphQL API to fetch
+contribution data. Store your token as a repository secret
+(`CONSTELLATION_TOKEN`) — never hard-code it into workflow files, source
+code, commits, issues, or pull requests. A classic PAT with no scopes is
+sufficient for public contribution data; don't grant it more than that.
 
 ## ❓ FAQ
 
-### Does it support private contributions?
+**Does this work with private contributions?**
+Yes. The GraphQL `contributionsCollection` query returns the same data
+shown on your public profile — including private contributions, if you've
+enabled _Include private contributions_ in your GitHub profile settings —
+using whatever token you supply.
 
-Yes, subject to what GitHub exposes through your authenticated contribution
-data and your profile's private-contribution settings.
+**Can I generate a constellation for someone else's profile, or an org's?**
+The action accepts any `github_user` your token can read contribution data
+for, but this is built for representing **your own** profile — only render
+a sky for an account you have permission to represent.
 
-### Can I generate a constellation for another GitHub user?
+**Why a PAT instead of the built-in `GITHUB_TOKEN`?**
+The built-in token is scoped to the repo running the workflow and isn't
+reliably able to query GraphQL contribution data for arbitrary accounts
+across every GitHub setup (personal, organization, Enterprise). A classic
+PAT provides a predictable authentication path for that request.
 
-The action accepts any `github_user` value for which the supplied token can
-retrieve the required contribution data.
+**Does the SVG require a server?**
+No. It's generated once per scheduled run and stored as a static file. Your
+README just references it.
 
-However, the project is primarily designed for representing **your own
-GitHub profile**.
+**Does the animation actually work on GitHub?**
+Yes — the twinkle and glow are CSS animations baked directly into the SVG
+markup, so they play wherever the SVG itself renders, no extra script
+needed.
 
-### Why not use `GITHUB_TOKEN`?
-
-The built-in token is scoped to the repository running the workflow and may
-not provide the access needed for contribution queries in every setup.
-
-A classic PAT provides a more predictable authentication path for the
-GraphQL request.
-
-### Does the SVG require a server?
-
-No.
-
-The SVG is generated once and stored in your repository as a static file.
-
-### Does the animation work on GitHub?
-
-The generated SVG contains the animation itself, so the README only needs
-to reference the resulting SVG.
-
-### Can I run the generator locally?
-
-Yes.
-
-The generator is a regular Node.js script:
+**Can I run the generator locally, outside GitHub Actions?**
+Yes — `src/generate-constellation.js` is a plain, dependency-free Node
+script:
 
 ```bash
-node src/generate-constellation.js
+GITHUB_TOKEN=xxx GITHUB_USER=octocat node src/generate-constellation.js
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md#testing-locally) for development and
-testing instructions.
-
----
-
-## 🛠️ Development
-
-Clone the repository:
-
-```bash
-git clone https://github.com/m3hrab/github-constellation.git
-cd github-constellation
-```
-
-Run the generator:
-
-```bash
-node src/generate-constellation.js
-```
-
-Generated files will appear in:
-
-```text
-dist/
-├── constellation-dark.svg
-└── constellation-light.svg
-```
-
----
+See [CONTRIBUTING.md](CONTRIBUTING.md#testing-locally) for the full local
+development workflow.
 
 ## 🤝 Contributing
 
-Ideas, bug reports, improvements, visual experiments, and gallery
-submissions are welcome.
-
-Before opening a pull request, please read:
-
-* [CONTRIBUTING.md](CONTRIBUTING.md)
-* [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
-
-If you build something interesting with github-constellation, I'd love to
-see it.
-
----
+Bug reports, feature ideas, and gallery submissions are all welcome — see
+[CONTRIBUTING.md](CONTRIBUTING.md) for branch naming, commit conventions,
+and how to test locally. Please be excellent to each other; see the
+[Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## 📄 License
 
-Released under the **MIT License**.
-
-See [LICENSE](LICENSE) for details.
-
----
+Released under the [MIT License](LICENSE) — do whatever you want with it.
 
 ## ⭐ Star History
 
-<a href="https://star-history.com/m3hrab/github-constellation&Date">
+<a href="https://star-history.com/#m3hrab/github-constellation&Date">
   <picture>
-    <source
-      media="(prefers-color-scheme: dark)"
-      srcset="https://api.star-history.com/svg?repos=m3hrab/github-constellation&type=Date&theme=dark"
-    />
-    <source
-      media="(prefers-color-scheme: light)"
-      srcset="https://api.star-history.com/svg?repos=m3hrab/github-constellation&type=Date"
-    />
-    <img
-      alt="Star History Chart"
-      src="https://api.star-history.com/svg?repos=m3hrab/github-constellation&type=Date"
-      width="700"
-    />
+    <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=m3hrab/github-constellation&type=Date&theme=dark" />
+    <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=m3hrab/github-constellation&type=Date" />
+    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=m3hrab/github-constellation&type=Date" width="700" />
   </picture>
 </a>
 
@@ -495,11 +348,7 @@ See [LICENSE](LICENSE) for details.
 
 <div align="center">
 
-### 🌌 Your commits are more than green squares.
-
-**They're a story. Turn it into a constellation.**
-
-<br />
+### Your commits are more than green squares. They're a story.
 
 Made with ⭐ by [m3hrab](https://github.com/m3hrab)
 
