@@ -40,11 +40,6 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 
-// ---------------------------------------------------------------------------
-// Config: env vars with defaults. Centralized here so action.yml and this
-// script can never drift out of sync — every input maps 1:1 to a key below.
-// ---------------------------------------------------------------------------
-
 const DEFAULTS = {
   COMMIT_CAP: 20,
   TWINKLE_MIN_COMMITS: 10,
@@ -120,10 +115,6 @@ if (!GITHUB_TOKEN) {
   process.exit(1);
 }
 
-// ---------------------------------------------------------------------------
-// GitHub GraphQL
-// ---------------------------------------------------------------------------
-
 const query = `
 query($userName: String!) {
   user(login: $userName) {
@@ -181,10 +172,6 @@ function graphqlRequest(query, variables) {
     req.end();
   });
 }
-
-// ---------------------------------------------------------------------------
-// Small helpers
-// ---------------------------------------------------------------------------
 
 function seededRandom(seed) {
   let h = 0;
@@ -245,8 +232,6 @@ const MONTH_NAMES = [
   "Dec",
 ];
 
-// Row index (0=Sun..6=Sat, matching GitHub's contributionDays order) ->
-// short label. Only Mon/Wed/Fri are labeled, GitHub-style.
 const DAY_LABELS = { 1: "Mon", 3: "Wed", 5: "Fri" };
 
 function formatMonthYear(date) {
@@ -296,10 +281,6 @@ function computeStats(sortedDays) {
   return { longest, current, mostActiveMonth, mostActiveTotal };
 }
 
-// ---------------------------------------------------------------------------
-// SVG construction
-// ---------------------------------------------------------------------------
-
 function buildSvg(weeks, theme, layout) {
   const { bg, starDim, textColor, recentColor, oldColor } = theme;
   const isMinimal = layout === "minimal";
@@ -327,10 +308,6 @@ function buildSvg(weeks, theme, layout) {
 
   const totalDays = allDays.length;
 
-  // Size and opacity are driven purely by the ABSOLUTE commit count for
-  // that day (not scaled relative to this dataset's max), so a 3-commit
-  // day always looks like a 3-commit day. Growth is capped at COMMIT_CAP
-  // so a single outlier day doesn't flatten every other day's contrast.
   function starRadius(count) {
     if (count === 0) return 0.6;
     const capped = Math.min(count, COMMIT_CAP);
@@ -345,8 +322,6 @@ function buildSvg(weeks, theme, layout) {
     return 0.5 + scale * 0.5;
   }
 
-  // Recency-based color spans the FULL year: index 0 (oldest) -> oldColor,
-  // last index (most recent) -> recentColor. Zero-count days stay dim/neutral.
   function starColor(day, index) {
     if (day.count === 0) return starDim;
     const t = totalDays > 1 ? index / (totalDays - 1) : 1;
@@ -372,8 +347,6 @@ function buildSvg(weeks, theme, layout) {
 
   const sortedDays = [...allDays].sort((a, b) => (a.date < b.date ? -1 : 1));
 
-  // Group consecutive active days (gap <= 1 day) into streaks, then draw
-  // each streak as ONE continuous Catmull-Rom spline through all its points.
   const streaks = [];
   let currentStreak = [];
   for (let i = 0; i < sortedDays.length; i++) {
@@ -425,22 +398,14 @@ function buildSvg(weeks, theme, layout) {
 
   const stats = computeStats(sortedDays);
   const totalContributions = allDays.reduce((s, d) => s + d.count, 0);
+  const accessibilitySummary = `GitHub contribution constellation: ${totalContributions} contributions, longest streak ${stats.longest} days`;
 
   let monthLabelsSvg = "";
   if (!isMinimal) {
-    // GitHub's contribution calendar almost always starts on a partial
-    // week, which can flag a "month change" one column after the very
-    // first label — e.g. a week starting Dec 30 gets labeled "Dec", then
-    // the next week (Jan 5) immediately gets labeled "Jan" just 12px to
-    // its right. Two 3-letter labels can't fit in 12px, so they render on
-    // top of each other. Enforce a minimum pixel gap between labels and
-    // simply skip any month change that's too close to the previous one —
-    // it'll still get labeled correctly whenever the *next* month change
-    // occurs with enough room.
     const monthLabels = [];
     let lastMonth = null;
     let lastLabelX = -Infinity;
-    const minLabelGap = cellSize * 3; // ~3 weeks of clearance per label
+    const minLabelGap = cellSize * 3;
 
     weeks.forEach((week, wi) => {
       const firstDay = week.contributionDays[0];
@@ -449,7 +414,7 @@ function buildSvg(weeks, theme, layout) {
       if (month === lastMonth) return;
 
       const x = paddingLeft + wi * cellSize;
-      lastMonth = month; // always advance, even if we skip rendering this one
+      lastMonth = month;
       if (x - lastLabelX < minLabelGap) return;
 
       monthLabels.push({ label: MONTH_NAMES[month], x });
@@ -481,8 +446,6 @@ function buildSvg(weeks, theme, layout) {
     crispLinesSvg += `<path d="${c.d}" fill="none" stroke="${c.color}" stroke-width="0.4" opacity="0.6" stroke-linecap="round" />`;
   });
 
-  // Stars: dim/static first (background layer), then bright/animated
-  // (foreground layer) so twinkle glows aren't occluded by static dots.
   let dimStarsSvg = "";
   let brightStarsSvg = "";
 
@@ -544,7 +507,8 @@ function buildSvg(weeks, theme, layout) {
   <text x="${width / 2}" y="${height - 10}" text-anchor="middle" font-family="Fira Code, monospace" font-size="9" fill="${textColor}" opacity="0.5">${captionLine2}</text>`;
   }
 
-  return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+  return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${accessibilitySummary}">
+  <title>${accessibilitySummary}</title>
   <defs>
     <filter id="streak-glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="1.6" result="blur" />
@@ -588,10 +552,6 @@ function buildSvg(weeks, theme, layout) {
 </svg>`;
 }
 
-// ---------------------------------------------------------------------------
-// Entry point
-// ---------------------------------------------------------------------------
-
 async function main() {
   console.log(
     `[github-constellation] Fetching contributions for "${GITHUB_USER}"...`,
@@ -624,7 +584,6 @@ async function main() {
   console.log(`[github-constellation] Wrote ${darkPath}`);
   console.log(`[github-constellation] Wrote ${lightPath}`);
 
-  // Expose paths for the composite action's later steps (e.g. commit step)
   if (process.env.GITHUB_OUTPUT) {
     fs.appendFileSync(
       process.env.GITHUB_OUTPUT,
