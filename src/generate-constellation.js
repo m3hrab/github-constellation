@@ -544,7 +544,10 @@ function buildSvg(weeks, theme, layout) {
   <text x="${width / 2}" y="${height - 10}" text-anchor="middle" font-family="Fira Code, monospace" font-size="9" fill="${textColor}" opacity="0.5">${captionLine2}</text>`;
   }
 
-  return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+  const summary = `GitHub contribution constellation: ${totalContributions} contributions, longest streak ${stats.longest} days`;
+
+  return `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${summary}">
+  <title>${summary}</title>
   <defs>
     <filter id="streak-glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="1.6" result="blur" />
