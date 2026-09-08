@@ -79,19 +79,29 @@ branch and reference it from a scratch workflow/repo:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+### About the self-showcase workflow
+
+`.github/workflows/self-showcase.yml` is maintainer-only tooling — it runs
+this repo's own action against the maintainer's real GitHub profile and
+commits the result into `docs/`, which is what makes the hero image in
+`README.md` a genuinely live render instead of a static placeholder. It
+needs a `SHOWCASE_TOKEN` repository secret to run. Contributors don't need
+this secret and can ignore this workflow entirely — it won't run on PRs
+from forks.
+
 ## Branch naming
 
 ```
 <type>/<short-description>
 ```
 
-| Type        | Use for                        | Example                          |
-| ----------- | ------------------------------- | --------------------------------- |
-| `feat/`     | new feature                     | `feat/minimal-layout-option`      |
-| `fix/`      | bug fix                         | `fix/light-theme-color-parsing`   |
-| `docs/`     | docs only                       | `docs/inputs-table-typo`          |
-| `chore/`    | tooling, CI, deps               | `chore/bump-setup-node-v5`        |
-| `refactor/` | no behavior change              | `refactor/extract-svg-builder`    |
+| Type        | Use for            | Example                         |
+| ----------- | ------------------ | ------------------------------- |
+| `feat/`     | new feature        | `feat/minimal-layout-option`    |
+| `fix/`      | bug fix            | `fix/light-theme-color-parsing` |
+| `docs/`     | docs only          | `docs/inputs-table-typo`        |
+| `chore/`    | tooling, CI, deps  | `chore/bump-setup-node-v5`      |
+| `refactor/` | no behavior change | `refactor/extract-svg-builder`  |
 
 Lowercase, hyphens (not underscores), 2–5 words. Issue numbers go in the PR
 description, not the branch name.
